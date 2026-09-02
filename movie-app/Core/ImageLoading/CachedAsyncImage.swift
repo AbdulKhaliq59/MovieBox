@@ -5,20 +5,42 @@ struct CachedAsyncImage: View {
     let size: String
     var contentMode: ContentMode = .fill
 
+    @State private var uiImage: UIImage?
+    @State private var didFail = false
+
+    private var url: URL? { ImageLoader.url(path: path, size: size) }
+
     var body: some View {
-        AsyncImage(url: ImageLoader.url(path: path, size: size)) { phase in
-            switch phase {
-            case .success(let image):
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: contentMode)
-            case .failure:
-                placeholder(showIcon: true)
-            case .empty:
-                placeholder(showIcon: false)
-            @unknown default:
-                placeholder(showIcon: false)
+        content
+            .task(id: url) {
+                await load()
             }
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        if let uiImage {
+            Image(uiImage: uiImage)
+                .resizable()
+                .aspectRatio(contentMode: contentMode)
+        } else if didFail || url == nil {
+            placeholder(showIcon: true)
+        } else {
+            placeholder(showIcon: false)
+        }
+    }
+
+    private func load() async {
+        guard let url else {
+            didFail = true
+            return
+        }
+        didFail = false
+        uiImage = nil
+        do {
+            uiImage = try await ImageLoader.loadImage(from: url)
+        } catch {
+            didFail = true
         }
     }
 
@@ -28,6 +50,8 @@ struct CachedAsyncImage: View {
             if showIcon {
                 Image(systemName: "photo")
                     .foregroundStyle(.secondary)
+            } else {
+                ProgressView()
             }
         }
     }

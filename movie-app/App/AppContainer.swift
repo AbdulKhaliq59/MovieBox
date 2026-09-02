@@ -26,8 +26,11 @@ final class AppContainer {
     let addFavoriteUseCase: AddFavoriteUseCase
     let removeFavoriteUseCase: RemoveFavoriteUseCase
     let isFavoriteUseCase: IsFavoriteUseCase
+    let themeManager: ThemeManager
 
     private init() {
+        themeManager = ThemeManager()
+
         let apiClient = URLSessionAPIClient()
         let movieRemoteDataSource = TMDBRemoteDataSource(apiClient: apiClient)
         let movieRepository = MovieRepositoryImpl(remoteDataSource: movieRemoteDataSource)

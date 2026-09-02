@@ -15,6 +15,7 @@ struct movie_appApp: App {
         WindowGroup {
             RootView()
                 .environment(\.appContainer, container)
+                .preferredColorScheme(container.themeManager.theme.colorScheme)
         }
     }
 }

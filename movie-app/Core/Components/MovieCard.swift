@@ -13,6 +13,7 @@ struct MovieCard: View {
             CachedAsyncImage(path: movie.posterPath, size: AppConfiguration.ImageSize.posterMedium)
                 .frame(width: width, height: width * 1.5)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
+                .accessibilityHidden(true)
 
             Text(movie.title)
                 .font(.subheadline.weight(.medium))

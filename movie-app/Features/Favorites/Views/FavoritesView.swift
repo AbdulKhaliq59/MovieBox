@@ -13,7 +13,7 @@ struct FavoritesView: View {
             Group {
                 switch viewModel.loadingState {
                 case .loading:
-                    LoadingView()
+                    MovieGridSkeleton()
                 case .error(let message):
                     ErrorView(message: message) {
                         Task { await viewModel.load() }
@@ -55,6 +55,7 @@ struct FavoritesView: View {
                         MovieCard(movie: movie, width: 140)
                     }
                     .buttonStyle(.plain)
+                    .transition(.opacity.combined(with: .scale(scale: 0.95)))
                     .contextMenu {
                         Button(role: .destructive) {
                             Task { await viewModel.remove(movie) }
@@ -65,6 +66,10 @@ struct FavoritesView: View {
                 }
             }
             .padding()
+            .animation(.easeOut(duration: 0.2), value: viewModel.favorites)
+        }
+        .refreshable {
+            await viewModel.load()
         }
     }
 }

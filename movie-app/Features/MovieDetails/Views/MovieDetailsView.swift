@@ -14,8 +14,7 @@ struct MovieDetailsView: View {
 
                 switch viewModel.loadingState {
                 case .loading:
-                    LoadingView()
-                        .frame(height: 200)
+                    MovieDetailsSkeletonView()
                 case .error(let message):
                     ErrorView(message: message) {
                         Task { await viewModel.loadIfNeeded() }
@@ -23,8 +22,10 @@ struct MovieDetailsView: View {
                     .frame(height: 200)
                 case .loaded:
                     content
+                        .transition(.opacity)
                 }
             }
+            .animation(.easeInOut(duration: 0.25), value: viewModel.loadingState)
             .padding(.bottom, 24)
         }
         .navigationTitle(viewModel.movie.title)
@@ -36,6 +37,8 @@ struct MovieDetailsView: View {
                 } label: {
                     Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
                         .foregroundStyle(viewModel.isFavorite ? .red : .primary)
+                        .scaleEffect(viewModel.isFavorite ? 1.15 : 1.0)
+                        .animation(.spring(response: 0.3, dampingFraction: 0.5), value: viewModel.isFavorite)
                 }
                 .accessibilityLabel(viewModel.isFavorite ? "Remove from Favorites" : "Add to Favorites")
             }
@@ -48,8 +51,10 @@ struct MovieDetailsView: View {
             CachedAsyncImage(path: viewModel.movie.backdropPath, size: AppConfiguration.ImageSize.backdrop)
                 .frame(height: 240)
                 .clipped()
+                .accessibilityHidden(true)
 
             LinearGradient(colors: [.clear, .black.opacity(0.8)], startPoint: .center, endPoint: .bottom)
+                .accessibilityHidden(true)
         }
         .frame(height: 240)
     }

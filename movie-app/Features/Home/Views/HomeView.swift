@@ -13,16 +13,23 @@ struct HomeView: View {
             Group {
                 switch viewModel.loadingState {
                 case .idle, .loading:
-                    LoadingView()
+                    HomeSkeletonView()
                 case .error(let message):
                     ErrorView(message: message) {
                         Task { await viewModel.refresh() }
                     }
                 case .loaded:
                     movieList
+                        .transition(.opacity)
                 }
             }
+            .animation(.easeInOut(duration: 0.25), value: viewModel.loadingState)
             .navigationTitle("Movies")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    ThemePickerMenu(themeManager: appContainer.themeManager)
+                }
+            }
             .navigationDestination(for: Movie.self) { movie in
                 MovieDetailsView(viewModel: MovieDetailsViewModel(
                     movie: movie,

@@ -10,6 +10,7 @@ struct EmptyStateView: View {
             Image(systemName: systemImage)
                 .font(.largeTitle)
                 .foregroundStyle(.secondary)
+                .accessibilityHidden(true)
             Text(title)
                 .font(.headline)
             Text(message)

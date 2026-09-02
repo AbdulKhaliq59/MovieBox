@@ -16,6 +16,7 @@ struct CastView: View {
                             CachedAsyncImage(path: member.profilePath, size: AppConfiguration.ImageSize.posterSmall)
                                 .frame(width: 80, height: 80)
                                 .clipShape(Circle())
+                                .accessibilityHidden(true)
 
                             Text(member.name)
                                 .font(.caption.weight(.medium))
@@ -28,6 +29,7 @@ struct CastView: View {
                                 .lineLimit(1)
                                 .frame(width: 80)
                         }
+                        .accessibilityElement(children: .combine)
                     }
                 }
                 .padding(.horizontal)
