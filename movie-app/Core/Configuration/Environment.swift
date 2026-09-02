@@ -1,7 +1,7 @@
 import Foundation
 
 
-enum Environment {
+enum AppEnvironment {
     static var tmdbAPIKey: String { Secrets.tmdbAPIKey }
     static var tmdbBaseURL: String { Secrets.tmdbBaseURL }
     static var tmdbImageBaseURL: String { Secrets.tmdbImageBaseURL }
