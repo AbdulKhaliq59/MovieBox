@@ -6,12 +6,19 @@ This project was built as a demonstration of a production-style iOS architecture
 
 ## Preview
 
-![MovieApp preview](movie-app/Assets.xcassets/app_presentation/movie_app.png)
+<p>
+  <img src="movie-app/Assets.xcassets/app_presentation/movie_app.png" alt="MovieApp screenshot" width="360">
+</p>
 
-<video src="movie-app/Assets.xcassets/app_presentation/Movie_App.mp4" controls width="360">
-  Demo video of MovieApp. If your viewer does not render inline video, open
-  movie-app/Assets.xcassets/app_presentation/Movie_App.mp4 directly.
-</video>
+**Demo:**
+
+<p>
+  <img src="movie-app/Assets.xcassets/app_presentation/movie_app_demo.gif" alt="MovieApp demo" width="360">
+</p>
+
+The GIF above is a compressed preview of the full walkthrough. A full-quality
+recording is available at
+[`movie-app/Assets.xcassets/app_presentation/Movie_App.mp4`](movie-app/Assets.xcassets/app_presentation/Movie_App.mp4).
 
 ## Features
 
@@ -151,7 +158,7 @@ If the API key has not been configured yet, the app still launches; screens that
 
 ## Notes on the demo assets
 
-The screenshot and video under `movie-app/Assets.xcassets/app_presentation/` are included for demonstration purposes only, so a reader of this repository can see the app in action without building it. They are not referenced by any app code and are not part of the compiled app bundle's usable asset catalog entries.
+The screenshot, GIF, and video under `movie-app/Assets.xcassets/app_presentation/` are included for demonstration purposes only, so a reader of this repository can see the app in action without building it. They are not referenced by any app code and are not part of the compiled app bundle's usable asset catalog entries. The GIF was generated from the original video with `ffmpeg` (palette-based encoding) so it renders inline in this README, since GitHub only auto-plays `<video>` elements for files uploaded through its own web UI, not for video files tracked directly in the repository.
 
 ## Attribution
 
