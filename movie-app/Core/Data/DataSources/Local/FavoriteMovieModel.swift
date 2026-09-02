@@ -1,9 +1,6 @@
 import Foundation
 import SwiftData
 
-/// SwiftData persistence model. Distinct from the Domain `Movie` entity —
-/// this stores enough fields to render a favorite offline, mapped to/from
-/// `Movie` by `FavoriteMovieMapper`.
 @Model
 final class FavoriteMovieModel {
     @Attribute(.unique) var id: Int
