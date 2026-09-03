@@ -1,4 +1,4 @@
-# MovieApp
+# MovieBox
 
 A movie discovery app for iOS, built with SwiftUI and The Movie Database (TMDB) API. Users can browse trending, popular, now-playing, top-rated, and upcoming movies, search the full TMDB catalog, view detailed information for any title, and save favorites that persist locally on the device.
 
@@ -6,19 +6,17 @@ This project was built as a demonstration of a production-style iOS architecture
 
 ## Preview
 
-<p>
-  <img src="movie-app/Assets.xcassets/app_presentation/movie_app.png" alt="MovieApp screenshot" width="360">
-</p>
+<table>
+  <tr>
+    <th>Screenshot</th>
+    <th>Demo</th>
+  </tr>
+  <tr>
+    <td><img src="MovieBox/Assets.xcassets/app_presentation/moviebox.png" alt="MovieBox screenshot" width="320"></td>
+    <td><img src="MovieBox/Assets.xcassets/app_presentation/moviebox_demo.gif" alt="MovieBox demo" width="320"></td>
+  </tr>
+</table>
 
-**Demo:**
-
-<p>
-  <img src="movie-app/Assets.xcassets/app_presentation/movie_app_demo.gif" alt="MovieApp demo" width="360">
-</p>
-
-The GIF above is a compressed preview of the full walkthrough. A full-quality
-recording is available at
-[`movie-app/Assets.xcassets/app_presentation/Movie_App.mp4`](movie-app/Assets.xcassets/app_presentation/Movie_App.mp4).
 
 ## Features
 
@@ -54,9 +52,10 @@ Domain (Entities, Repository protocols)   <-- shared contracts, in Core
 ### Project structure
 
 ```
-movie-app/
+MovieBox/
 ├── App/                        Composition root: entry point, dependency
-│                                injection container, tab navigation root
+│   │                            injection container, tab navigation root
+│   └── Navigation/              AppRouter, deep link parsing, route types
 │
 ├── Core/                       Shared across two or more features
 │   ├── Configuration/          Environment values, app-wide constants
@@ -131,10 +130,10 @@ Create a free account at [themoviedb.org](https://www.themoviedb.org/) and reque
 The project reads configuration from a local, gitignored `Secrets.swift` file instead of committing a key to source control. From the repository root:
 
 ```bash
-cp movie-app/Core/Configuration/Secrets.swift.example movie-app/Core/Configuration/Secrets.swift
+cp MovieBox/Core/Configuration/Secrets.swift.example MovieBox/Core/Configuration/Secrets.swift
 ```
 
-Then open `movie-app/Core/Configuration/Secrets.swift` and replace the placeholder with your key:
+Then open `MovieBox/Core/Configuration/Secrets.swift` and replace the placeholder with your key:
 
 ```swift
 enum Secrets {
@@ -149,27 +148,43 @@ enum Secrets {
 ### 4. Open and run
 
 ```bash
-open movie-app.xcodeproj
+open MovieBox.xcodeproj
 ```
 
-In Xcode, select the `movie-app` scheme, choose a simulator (or a connected device), and run (Cmd+R). No CocoaPods, Swift Package dependencies, or additional build steps are required — the project only depends on Apple's own frameworks.
+In Xcode, select the `MovieBox` scheme, choose a simulator (or a connected device), and run (Cmd+R). No CocoaPods, Swift Package dependencies, or additional build steps are required — the project only depends on Apple's own frameworks.
 
 If the API key has not been configured yet, the app still launches; screens that require network data will show their error state until `Secrets.swift` is filled in.
 
 ## Notes on the demo assets
 
-The screenshot, GIF, and video under `movie-app/Assets.xcassets/app_presentation/` are included for demonstration purposes only, so a reader of this repository can see the app in action without building it. They are not referenced by any app code and are not part of the compiled app bundle's usable asset catalog entries. The GIF was generated from the original video with `ffmpeg` (palette-based encoding) so it renders inline in this README, since GitHub only auto-plays `<video>` elements for files uploaded through its own web UI, not for video files tracked directly in the repository.
+The screenshot and GIF under `MovieBox/Assets.xcassets/app_presentation/` are included for demonstration purposes only, so a reader of this repository can see the app in action without building it. They are not referenced by any app code and are not part of the compiled app bundle's usable asset catalog entries. The GIF was generated from a screen recording with `ffmpeg` (palette-based encoding) so it renders inline in this README, since GitHub only auto-plays `<video>` elements for files uploaded through its own web UI, not for video files tracked directly in the repository.
+
+## Deep linking
+
+The app registers the `moviebox://` URL scheme and routes incoming links through a dedicated `AppRouter` (`App/Navigation/`), which owns the selected tab and each tab's navigation path as shared, externally-controllable state rather than state private to each screen.
+
+Supported links:
+
+| Link | Behavior |
+| --- | --- |
+| `moviebox://home` | Switches to the Home tab and pops its stack to the root. |
+| `moviebox://search?q=<term>` | Switches to Search and runs a search for `<term>`. |
+| `moviebox://favorites` | Switches to the Favorites tab and pops its stack to the root. |
+| `moviebox://movie/<id>` | Pushes Movie Details for the given TMDB movie id, on top of whichever tab is currently active. |
+
+A movie deep link carries only an id, not a full `Movie` (the caller may not have one), so it is resolved through a small loader view that fetches the movie's details before handing off to the same `MovieDetailsView` used for in-app navigation — in-app taps still route on the already-known `Movie` directly, avoiding a redundant network call.
+
+To try it with the app running in Simulator:
+
+```bash
+xcrun simctl openurl booted "moviebox://movie/1386315"
+xcrun simctl openurl booted "moviebox://search?q=batman"
+```
 
 ## Attribution
 
 This product uses the TMDB API but is not endorsed or certified by TMDB.
 
-## Roadmap
-
-The following items from the original project plan are not yet implemented:
-
-- Automated test suite (Domain use case tests, Data layer/mapper tests, ViewModel tests with mocked repositories)
-- Deep linking / a dedicated `AppRouter` for more complex navigation flows
 
 ## License
 

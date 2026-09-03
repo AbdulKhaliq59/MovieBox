@@ -35,4 +35,4 @@ fastlane/test_output
 # Environment / secrets — never commit real API keys
 .env
 .env.local
-movie-app/Core/Configuration/Secrets.swift
+MovieBox/Core/Configuration/Secrets.swift
